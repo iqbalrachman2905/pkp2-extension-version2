@@ -1,0 +1,109 @@
+---
+const { content } = Astro.props;
+
+// Dikumpulin dari semua key yang polanya promo_items_N (promo_items_1,
+// promo_items_2, dst) - jadi berapa pun jumlahnya lo isi di sheet, otomatis
+// kebaca semua tanpa perlu ubah kode.
+const promoItems = Object.keys(content)
+  .filter((k) => /^promo_items_\d+$/.test(k))
+  .sort()
+  .map((k) => content[k])
+  .filter(Boolean);
+
+// Promo otomatis nongol/hilang sendiri sesuai tanggal di sheet Content -
+// gak perlu lo matiin manual pas promo abis, dan gak perlu nyalain manual
+// pas promo baru mulai.
+const now = new Date();
+const start = content.promo_start_date ? new Date(content.promo_start_date) : null;
+const end = content.promo_end_date ? new Date(content.promo_end_date) : null;
+const isPromoActive = (!start || now >= start) && (!end || now <= end);
+---
+
+{promoItems.length > 0 && isPromoActive && (
+  <section id="promo" class="promo-section">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Promo Terbatas</span>
+        <h2>Promo & Bonus Menarik</h2>
+      </div>
+
+      <div class="promo-grid">
+        <div class="promo-card">
+          <h3>KPR & Cash Bertahap</h3>
+          <ul>
+            {promoItems.map((item) => <li>✓ {item}</li>)}
+            {content.promo_diskon_kpr && <li class="promo-diskon">✓ Diskon {content.promo_diskon_kpr}</li>}
+          </ul>
+        </div>
+        <div class="promo-card promo-card-highlight">
+          <h3>Cash Keras</h3>
+          <ul>
+            {promoItems.map((item) => <li>✓ {item}</li>)}
+            {content.promo_diskon_cash && <li class="promo-diskon">✓ Diskon {content.promo_diskon_cash}</li>}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .promo-section {
+    padding-block: var(--space-xl);
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+  .section-heading {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  .eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    margin-bottom: 6px;
+  }
+  .section-heading h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--color-white);
+  }
+  .promo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  .promo-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+  }
+  .promo-card-highlight {
+    border-color: var(--color-gold);
+    background: rgba(184, 147, 95, 0.12);
+  }
+  .promo-card h3 {
+    font-family: var(--font-display);
+    margin-bottom: var(--space-sm);
+    color: var(--color-gold);
+  }
+  .promo-card ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    font-size: 0.92rem;
+  }
+  .promo-diskon {
+    font-weight: 700;
+    color: var(--color-gold);
+  }
+
+  @media (min-width: 640px) {
+    .promo-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

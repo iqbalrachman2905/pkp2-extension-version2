@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import UnitFilterGrid from '../components/UnitFilterGrid.vue';
+import GalleryLightbox from '../components/GalleryLightbox.vue';
+import ProgressSection from '../components/ProgressSection.astro';
+import KprCalculator from '../components/KprCalculator.vue';
+import ArticlePreview from '../components/ArticlePreview.astro';
+import PromoSection from '../components/PromoSection.astro';
+import FacilitiesSection from '../components/FacilitiesSection.astro';
+import TrustSection from '../components/TrustSection.astro';
+import SiteplanSection from '../components/SiteplanSection.astro';
+import VideoSection from '../components/VideoSection.astro';
+import MapsSection from '../components/MapsSection.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteData, findCoverImage } from '../lib/api.js';
+import { safeImage } from '../lib/image.js';
+import { extractYoutubeId } from '../lib/format.js';
+
+// Semua fetch + optimasi gambar di bawah ini jalan di Node.js pas build
+// GitHub Actions - visitor akhir nggak pernah nunggu Apps Script atau
+// Google Drive sama sekali, cuma terima HTML + gambar statis yang udah jadi.
+const { content, units, gallery, articles, testimonials } = await getSiteData();
+const heroImage = findCoverImage(gallery, 'hero', 'hero');
+const heroImageResult = heroImage
+  ? await safeImage(heroImage.image_url, { widths: [640, 1024, 1600, 1920], format: 'webp', quality: 70 })
+  : null;
+
+// Sisa unit = yang statusnya BUKAN 'Sold'. Dihitung otomatis dari data
+// sheet, bukan angka manual - jadi selalu akurat begitu status unit diubah.
+const availableUnits = units.filter(u => u.status !== 'Sold').length;
+const totalUnits = content.total_unit || units.length;
+
+// Resolve & optimasi foto cover tiap unit SEKALI di build, baru dikirim
+// sebagai data biasa (string URL) ke Vue island - jadi Vue-nya nggak perlu
+// tau apa-apa soal Astro Image, cuma render <img> biasa. Kalau 1 foto gagal
+// diproses (format aneh dll), coverSrc-nya null - komponen udah nampilin
+// placeholder buat kasus ini, build tetap lanjut normal.
+const unitsWithCover = await Promise.all(
+  units.map(async (unit) => {
+    const cover = findCoverImage(gallery, 'unit', unit.kode_unit);
+    const optimized = cover
+      ? await safeImage(cover.image_url, { width: 800, format: 'webp', quality: 72 })
+      : null;
+    return { ...unit, coverSrc: optimized?.src || null, coverCaption: cover?.caption || null };
+  })
+);
+
+// Sama buat galeri: thumbnail kecil buat grid, versi lebih besar buat lightbox.
+// Foto yang gagal diproses otomatis disaring keluar dari daftar (bukan
+// ditampilin rusak / bikin build berhenti).
+const galleryItemsRaw = await Promise.all(
+  gallery
+    .filter(g => g.kategori !== 'hero' && g.image_url)
+    .sort((a, b) => (a.urutan || 0) - (b.urutan || 0))
+    .map(async (item) => {
+      const [thumb, full] = await Promise.all([
+        safeImage(item.image_url, { width: 500, format: 'webp', quality: 70 }),
+        safeImage(item.image_url, { width: 1400, format: 'webp', quality: 78 })
+      ]);
+      if (!thumb || !full) return null;
+      return { id: item.id, caption: item.caption, thumbSrc: thumb.src, fullSrc: full.src };
+    })
+);
+const galleryItems = galleryItemsRaw.filter(Boolean);
+
+// Foto progress pembangunan - cukup semua foto kategori 'progress', tanpa riwayat rumit.
+const progressItemsRaw = await Promise.all(
+  gallery
+    .filter(g => g.kategori === 'progress' && g.image_url)
+    .sort((a, b) => (a.urutan || 0) - (b.urutan || 0))
+    .map(async (item) => {
+      const optimized = await safeImage(item.image_url, { width: 700, format: 'webp', quality: 72 });
+      if (!optimized) return null;
+      return { id: item.id, caption: item.caption, src: optimized.src };
+    })
+);
+const progressItems = progressItemsRaw.filter(Boolean);
+
+// 3 artikel terbaru buat homepage - cukup resolve cover-nya aja di sini,
+// isi lengkap (body_html) baru diambil di halaman detail masing-masing.
+const articlesWithCover = await Promise.all(
+  articles.slice(0, 3).map(async (a) => {
+    const optimized = a.cover_url
+      ? await safeImage(a.cover_url, { width: 500, format: 'webp', quality: 72 })
+      : null;
+    return { ...a, coverSrc: optimized?.src || null };
+  })
+);
+
+const siteplanResult = content.siteplan
+  ? await safeImage(content.siteplan, { width: 1400, format: 'webp', quality: 78 })
+  : null;
+
+const videoId = extractYoutubeId(content.video);
+---
+
+<BaseLayout
+  title={content.meta_title || content.hero_title}
+  description={content.meta_description}
+  ogImage={heroImageResult?.src}
+  companyName={content.company_name}
+  companyPhone={content.footer_phone}
+  waNumber={content.whatsapp_number}
+>
+  <Navbar content={content} />
+  <Hero content={content} heroImageResult={heroImageResult} availableUnits={availableUnits} totalUnits={totalUnits} />
+
+  <PromoSection content={content} />
+
+  <section id="unit" class="units-section">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Pilihan Unit</span>
+        <h2>Temukan Tipe yang Sesuai</h2>
+      </div>
+      <UnitFilterGrid client:visible units={unitsWithCover} waNumber={content.whatsapp_number} />
+    </div>
+  </section>
+
+  <section id="galeri" class="gallery-section">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Galeri</span>
+        <h2>Rasakan Suasana Tinggal di Sini</h2>
+      </div>
+      <GalleryLightbox client:visible items={galleryItems} />
+    </div>
+  </section>
+
+  <FacilitiesSection content={content} />
+
+  <SiteplanSection imageResult={siteplanResult} />
+
+  <MapsSection content={content} />
+
+  <VideoSection videoId={videoId} />
+
+  <ProgressSection items={progressItems} />
+
+  <TrustSection content={content} testimonials={testimonials} />
+
+  <section id="kpr" class="kpr-section">
+    <div class="container container-narrow">
+      <div class="section-heading">
+        <span class="eyebrow">Simulasi KPR</span>
+        <h2>Cek Estimasi Cicilan Bulanan</h2>
+      </div>
+      <KprCalculator client:visible defaultPrice={content.price_from || 900000000} />
+    </div>
+  </section>
+
+  <ArticlePreview articles={articlesWithCover} />
+
+  <Footer content={content} />
+</BaseLayout>
+
+<style>
+  .units-section { padding-block: var(--space-xl); background: var(--color-paper); }
+  .gallery-section { padding-block: var(--space-xl); }
+  .kpr-section { padding-block: var(--space-xl); background: var(--color-paper); }
+  .container-narrow { max-width: 760px; }
+  .section-heading { text-align: center; margin-bottom: var(--space-lg); }
+  .eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    margin-bottom: 6px;
+  }
+  .section-heading h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+</style>

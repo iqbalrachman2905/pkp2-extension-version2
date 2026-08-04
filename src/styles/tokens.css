@@ -1,0 +1,82 @@
+:root {
+  /* --- Warna (sesuai brief: White utama, Navy secondary, Gold cuma highlight) --- */
+  --color-white: #FFFFFF;
+  --color-paper: #EDEEF0;      /* background section alternatif, bukan putih polos */
+  --color-navy: #14213D;        /* teks utama & elemen secondary */
+  --color-navy-soft: #2C3B5C;   /* navy lebih terang, buat teks sekunder di atas navy */
+  --color-gold: #B8935F;        /* HANYA buat highlight: harga, badge, garis aksen */
+  --color-gold-soft: #E8DCC8;   /* gold pucat, buat background badge tipis */
+
+  /* Status badge unit - dipisah dari palet utama biar gampang di-scan mata */
+  --color-status-available: #2F7A4D;
+  --color-status-sold: #8A8F98;
+  --color-status-ready: #1B6FA8;
+  --color-status-progress: #B8935F;
+
+  /* --- Tipografi --- */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Poppins', -apple-system, sans-serif;
+
+  /* --- Radius & shadow (brief: rounded corner besar, soft shadow) --- */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --shadow-soft: 0 8px 30px rgba(20, 33, 61, 0.08);
+  --shadow-card: 0 4px 16px rgba(20, 33, 61, 0.06);
+
+  /* --- Spacing scale --- */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 48px;
+  --space-xl: 80px;
+
+  --container-width: 1200px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-navy);
+  background: var(--color-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Fokus keyboard tetap kelihatan - jangan dihapus demi aksesibilitas */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
