@@ -1,34 +1,42 @@
 ---
 const { content } = Astro.props;
 
-// Mencari key yang berawalan 'Spek_bangunan'
-const specKeys = Object.keys(content).filter(key => key.startsWith('Spek_bangunan'));
+// Filter otomatis semua baris di sheet Content yang key-nya berawalan 'spec_'
+const specKeys = Object.keys(content).filter(key => key.startsWith('spec_'));
 const specs = specKeys.map(key => {
   const [title, desc] = content[key].split('::');
   return { title, desc };
 }).filter(item => item.title && item.desc);
 ---
-<section id="spesifikasi" class="py-16 bg-gray-50">
+<section id="spesifikasi" class="py-20 bg-white">
   <div class="container mx-auto px-4 max-w-5xl">
-    <h2 class="text-3xl font-bold mb-14 text-center text-gray-800">Spesifikasi Bangunan</h2>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
+    <div class="text-center mb-14">
+      <span class="text-xs md:text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3 block">Kualitas Material</span>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Spesifikasi Bangunan</h2>
+    </div>
+    
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
       {specs.map(spec => (
-        <div class="flex items-start gap-5 group">
-          <!-- Icon Bulat Kuning dengan Checkmark -->
-          <div class="flex-shrink-0 w-11 h-11 bg-yellow-400 rounded-full flex items-center justify-center mt-1 shadow-sm transition-transform group-hover:scale-110">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <div class="flex items-start gap-5 p-6 rounded-2xl bg-[#F8FAFC] border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group">
+          
+          <!-- Icon Bulat (Diperkecil agar proporsional) -->
+          <div class="flex-shrink-0 w-8 h-8 bg-[#D4AF37] rounded-full flex items-center justify-center mt-1 shadow-sm group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
           
           <!-- Teks Spesifikasi -->
           <div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">{spec.title}</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">{spec.desc}</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{spec.title}</h3>
+            <p class="text-gray-600 leading-relaxed text-sm">{spec.desc}</p>
           </div>
+          
         </div>
       ))}
     </div>
+    
   </div>
 </section>
