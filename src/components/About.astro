@@ -1,0 +1,32 @@
+---
+const { content, gallery } = Astro.props;
+
+// Mencari satu gambar spesifik untuk section Tentang
+const imageTentang = gallery.find(item => item.kategori === 'tentang');
+---
+<section id="tentang" class="py-16 bg-white">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
+    <!-- Kolom Gambar -->
+    <div class="w-full md:w-1/2">
+      {imageTentang ? (
+        <img 
+          src={imageTentang.image_url} 
+          alt="Tentang PKP2 Extension" 
+          class="w-full h-auto rounded-xl shadow-lg object-cover" 
+          loading="lazy" 
+        />
+      ) : (
+        <div class="w-full h-64 bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 shadow-inner">
+          Gambar Tentang (Tambahkan di Sheet Gallery)
+        </div>
+      )}
+    </div>
+    
+    <!-- Kolom Teks -->
+    <div class="w-full md:w-1/2">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800">Tentang Kami</h2>
+      <!-- whitespace-pre-wrap krusial agar format paragraf dari Google Sheet (enter) terbaca -->
+      <p class="text-gray-600 leading-relaxed whitespace-pre-wrap">{content.about_description}</p>
+    </div>
+  </div>
+</section>
