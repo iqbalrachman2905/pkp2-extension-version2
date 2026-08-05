@@ -3,16 +3,18 @@ import vue from '@astrojs/vue';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://purikencanapermai2.com',
+  // 1. URL utama GitHub Pages lo
+  site: 'https://iqbalrachman2905.github.io',
+  
+  // 2. Base path sesuai nama repo supaya gambar gak error/404
+  base: '/pkp2-extension-version2',
 
+  // 3. Integrasi bawaan lo
   integrations: [vue(), sitemap()],
 
+  // 4. Konfigurasi gambar (wajib buat ngambil dari Google Drive)
   image: {
-    // Astro pakai Sharp di balik layar buat resize/convert gambar saat build.
     service: { entrypoint: 'astro/assets/services/sharp' },
-    // Wajib di-whitelist supaya Astro MAU download & optimize gambar dari
-    // Google Drive - tanpa ini, <Image src="https://drive.google.com/..."/>
-    // akan ditolak demi keamanan (default-nya semua domain luar diblokir).
     domains: ['drive.google.com']
   }
 });
