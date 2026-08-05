@@ -5,7 +5,7 @@
 let cachedSiteData = null;
 const articleCache = new Map();
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxphA_A0OyZsznpEwAFsKotLErEGkVtox8-g23KAojlOfxpE8wVjLnXu9l9XeP6dN8aCg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwlmX6B5_BUlANlFm5ZkdvwRBZDaoSEXKgsq8AMaAkMlxwzljcUyP04T2vUgpN_yW_1/exec';
 
 /**
  * Dipanggil di frontmatter halaman .astro (jalan di Node.js pas build,
