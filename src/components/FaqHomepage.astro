@@ -1,0 +1,31 @@
+---
+const { content } = Astro.props;
+
+// Mencari key yang berawalan 'faq_'
+const faqKeys = Object.keys(content).filter(key => key.startsWith('faq_'));
+const faqs = faqKeys.map(key => {
+  const [question, answer] = content[key].split('::');
+  return { question, answer };
+}).filter(item => item.question && item.answer);
+---
+<section id="faq-home" class="py-16 bg-white border-t border-gray-100">
+  <div class="container mx-auto px-4 max-w-3xl">
+    <h2 class="text-3xl font-bold mb-10 text-center text-gray-800">Pertanyaan Seputar PKP2 Extension</h2>
+    
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group border border-gray-200 rounded-xl bg-gray-50 overflow-hidden shadow-sm">
+          <summary class="flex justify-between items-center font-semibold cursor-pointer list-none p-5 text-gray-800 hover:bg-gray-100 transition-colors">
+            <span class="pr-6">{faq.question}</span>
+            <span class="transition-transform duration-300 group-open:rotate-180 flex-shrink-0 text-gray-400 group-hover:text-gray-700">
+              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="p-5 pt-2 text-gray-600 text-sm md:text-base leading-relaxed bg-gray-50 border-t border-gray-100">
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
