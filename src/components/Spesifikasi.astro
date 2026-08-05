@@ -1,0 +1,34 @@
+---
+const { content } = Astro.props;
+
+// Mencari key yang berawalan 'Spek_bangunan'
+const specKeys = Object.keys(content).filter(key => key.startsWith('Spek_bangunan'));
+const specs = specKeys.map(key => {
+  const [title, desc] = content[key].split('::');
+  return { title, desc };
+}).filter(item => item.title && item.desc);
+---
+<section id="spesifikasi" class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4 max-w-5xl">
+    <h2 class="text-3xl font-bold mb-14 text-center text-gray-800">Spesifikasi Bangunan</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-10 gap-x-12">
+      {specs.map(spec => (
+        <div class="flex items-start gap-5 group">
+          <!-- Icon Bulat Kuning dengan Checkmark -->
+          <div class="flex-shrink-0 w-11 h-11 bg-yellow-400 rounded-full flex items-center justify-center mt-1 shadow-sm transition-transform group-hover:scale-110">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          
+          <!-- Teks Spesifikasi -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">{spec.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">{spec.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
