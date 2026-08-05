@@ -1,0 +1,29 @@
+---
+const { content } = Astro.props;
+
+// Ambil trust points dan pisah judul serta deskripsinya
+const trustKeys = ['trust_points_1', 'trust_points_2', 'trust_points_3'];
+const trustItems = trustKeys.map(key => {
+  if (content[key]) {
+    const [title, desc] = content[key].split('::');
+    return { title, desc };
+  }
+  return null;
+}).filter(Boolean); // Buang yang null/kosong
+---
+<section id="trusted" class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4 text-center">
+    <h2 class="text-3xl font-bold mb-10 text-gray-800">Kenapa Memilih Kami?</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {trustItems.map(item => (
+        <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+          <!-- Icon placeholder (opsional, bisa diganti SVG) -->
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">✓</div>
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">{item.title}</h3>
+          <p class="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
