@@ -1,31 +1,31 @@
 ---
 const { content, gallery } = Astro.props;
-
-// Mencari satu gambar spesifik untuk section Tentang
 const imageTentang = gallery.find(item => item.kategori === 'tentang');
 ---
-<section id="tentang" class="py-16 bg-white">
-  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
-    <!-- Kolom Gambar -->
+<section id="tentang" class="py-20 bg-white">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
     <div class="w-full md:w-1/2">
       {imageTentang ? (
-        <img 
-          src={imageTentang.image_url} 
-          alt="Tentang PKP2 Extension" 
-          class="w-full h-auto rounded-xl shadow-lg object-cover" 
-          loading="lazy" 
-        />
+        <div class="relative">
+          <img
+            src={imageTentang.thumbnail_url}
+            alt="Tentang PKP2 Extension"
+            class="w-full h-auto rounded-2xl shadow-xl object-cover aspect-[4/3]"
+            loading="lazy"
+          />
+          <div class="absolute -bottom-4 -left-4 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-semibold hidden md:block">
+            Sejak pertengahan 2010-an
+          </div>
+        </div>
       ) : (
-        <div class="w-full h-64 bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 shadow-inner">
-          Gambar Tentang (Tambahkan di Sheet Gallery)
+        <div class="w-full aspect-[4/3] bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 shadow-inner">
+          Gambar belum tersedia
         </div>
       )}
     </div>
-    
-    <!-- Kolom Teks -->
     <div class="w-full md:w-1/2">
-      <h2 class="text-3xl font-bold mb-6 text-gray-800">Tentang Kami</h2>
-      <!-- whitespace-pre-wrap krusial agar format paragraf dari Google Sheet (enter) terbaca -->
+      <span class="text-blue-600 font-semibold text-sm uppercase tracking-wide">Tentang Kami</span>
+      <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-6 text-gray-800">Perjalanan Puri Kencana Permai</h2>
       <p class="text-gray-600 leading-relaxed whitespace-pre-wrap">{content.about_description}</p>
     </div>
   </div>
