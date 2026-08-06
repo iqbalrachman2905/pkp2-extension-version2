@@ -6,35 +6,96 @@ const specs = specKeys.map(key => {
   return { title, desc };
 }).filter(item => item.title && item.desc);
 ---
-<section id="spesifikasi" class="py-20 bg-[#F7F8FC]">
-  <div class="container mx-auto px-4 max-w-5xl">
 
-    <div class="text-center mb-14">
-      <span class="text-xs md:text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3 block">Kualitas Material</span>
-      <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Spesifikasi Bangunan</h2>
+<section id="spesifikasi" class="spesifikasi-section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">Kualitas Material</span>
+      <h2>Spesifikasi Bangunan</h2>
     </div>
 
-    <!-- Grid Layout: flat list, tanpa card -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+    <div class="spec-grid">
       {specs.map(spec => (
-        <div class="flex items-start gap-4">
-
-          <!-- Icon kotak rounded, checkmark -->
-          <div class="flex-shrink-0 w-9 h-9 bg-[#D4AF37] rounded-lg flex items-center justify-center mt-0.5 shadow-sm">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        <div class="spec-item">
+          <span class="spec-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
             </svg>
+          </span>
+          <div class="spec-text">
+            <h3>{spec.title}</h3>
+            <p>{spec.desc}</p>
           </div>
-
-          <!-- Teks Spesifikasi -->
-          <div>
-            <h3 class="text-lg font-bold text-gray-900 mb-1">{spec.title}</h3>
-            <p class="text-[#B8894A] leading-relaxed text-sm">{spec.desc}</p>
-          </div>
-
         </div>
       ))}
     </div>
-
   </div>
 </section>
+
+<style>
+  .spesifikasi-section {
+    padding-block: var(--space-xl);
+    background: var(--color-bg-grey, #f6f7fb);
+  }
+  .section-heading {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  .eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gold, #D4AF37);
+    margin-bottom: 6px;
+  }
+  .section-heading h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    color: var(--color-navy, #1a1a2e);
+  }
+  .spec-grid {
+    max-width: 900px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--space-xl);
+    row-gap: 28px;
+  }
+  .spec-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .spec-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-gold, #D4AF37);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .spec-text h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-navy, #1a1a2e);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .spec-text p {
+    font-size: 0.85rem;
+    color: var(--color-gold, #b8860b);
+    line-height: 1.4;
+  }
+  @media (max-width: 640px) {
+    .spec-grid {
+      grid-template-columns: 1fr;
+      row-gap: 22px;
+    }
+  }
+</style>
