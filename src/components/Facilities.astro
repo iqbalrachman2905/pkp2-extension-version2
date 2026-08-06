@@ -1,25 +1,11 @@
 ---
-import { getImage } from 'astro:assets';
-import GalleryLightbox from './GalleryLightbox.vue';
+import { Image } from 'astro:assets';
 
 const { gallery } = Astro.props;
 
-const raw = gallery
-  .filter(g => g.kategori === 'facility' && g.image_url)
+const items = gallery
+  .filter(g => g.kategori === 'facility' && g.thumbnail_url)
   .sort((a, b) => (a.urutan || 0) - (b.urutan || 0));
-
-// getImage() proses build-time yang sama kayak <Image>, tapi hasilnya
-// berupa URL string biasa, jadi bisa dilempar ke komponen Vue (client-side).
-const items = await Promise.all(raw.map(async (item) => {
-  const thumb = await getImage({ src: item.image_url, width: 400, format: 'webp', quality: 72 });
-  const full = await getImage({ src: item.image_url, width: 1200, format: 'webp', quality: 82 });
-  return {
-    id: item.id,
-    thumbSrc: thumb.src,
-    fullSrc: full.src,
-    caption: item.caption
-  };
-}));
 ---
 
 <section id="fasilitas" class="facilities-section">
@@ -28,7 +14,24 @@ const items = await Promise.all(raw.map(async (item) => {
       <span class="eyebrow">Fasilitas</span>
       <h2>Fasilitas Premium untuk Keluarga</h2>
     </div>
-    <GalleryLightbox items={items} client:visible />
+
+    <div class="gallery-grid">
+      {items.map((item) => (
+        <figure class="gallery-item">
+          <Image
+            src={item.thumbnail_url}
+            inferSize
+            alt={item.caption || 'Fasilitas'}
+            widths={[400, 700]}
+            sizes="(max-width: 640px) 50vw, 300px"
+            format="webp"
+            quality={72}
+            loading="lazy"
+          />
+          {item.caption && <figcaption>{item.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
   </div>
 </section>
 
@@ -52,5 +55,31 @@ const items = await Promise.all(raw.map(async (item) => {
   }
   .section-heading h2 {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-sm);
+  }
+  .gallery-item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .gallery-item :global(img) {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .gallery-item figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(20,33,61,0.75), transparent);
+    color: var(--color-white);
+    font-size: 0.78rem;
+    padding: 20px 10px 8px;
   }
 </style>
