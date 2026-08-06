@@ -1,42 +1,40 @@
 ---
 const { content } = Astro.props;
-
-// Filter otomatis semua baris di sheet Content yang key-nya berawalan 'spec_'
 const specKeys = Object.keys(content).filter(key => key.startsWith('spec_'));
 const specs = specKeys.map(key => {
   const [title, desc] = content[key].split('::');
   return { title, desc };
 }).filter(item => item.title && item.desc);
 ---
-<section id="spesifikasi" class="py-20 bg-white">
+<section id="spesifikasi" class="py-20 bg-[#F7F8FC]">
   <div class="container mx-auto px-4 max-w-5xl">
-    
+
     <div class="text-center mb-14">
       <span class="text-xs md:text-sm font-bold tracking-widest text-[#D4AF37] uppercase mb-3 block">Kualitas Material</span>
       <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Spesifikasi Bangunan</h2>
     </div>
-    
-    <!-- Grid Layout -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+
+    <!-- Grid Layout: flat list, tanpa card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
       {specs.map(spec => (
-        <div class="flex items-start gap-5 p-6 rounded-2xl bg-[#F8FAFC] border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 group">
-          
-          <!-- Icon Bulat (Diperkecil agar proporsional) -->
-          <div class="flex-shrink-0 w-8 h-8 bg-[#D4AF37] rounded-full flex items-center justify-center mt-1 shadow-sm group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-start gap-4">
+
+          <!-- Icon kotak rounded, checkmark -->
+          <div class="flex-shrink-0 w-9 h-9 bg-[#D4AF37] rounded-lg flex items-center justify-center mt-0.5 shadow-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
             </svg>
           </div>
-          
+
           <!-- Teks Spesifikasi -->
           <div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">{spec.title}</h3>
-            <p class="text-gray-600 leading-relaxed text-sm">{spec.desc}</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-1">{spec.title}</h3>
+            <p class="text-[#B8894A] leading-relaxed text-sm">{spec.desc}</p>
           </div>
-          
+
         </div>
       ))}
     </div>
-    
+
   </div>
 </section>
