@@ -1,25 +1,23 @@
 ---
 const { gallery } = Astro.props;
-
-// Filter khusus gambar yang kategorinya 'facility'
 const facilities = gallery.filter(item => item.kategori === 'facility');
 ---
-<section id="fasilitas" class="py-16 bg-white">
+<section id="fasilitas" class="py-20 bg-white">
   <div class="container mx-auto px-4 text-center">
-    <h2 class="text-3xl font-bold mb-10 text-gray-800">Fasilitas Premium</h2>
-    
+    <span class="text-blue-600 font-semibold text-sm uppercase tracking-wide">Fasilitas</span>
+    <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-12 text-gray-800">Fasilitas Premium untuk Keluarga</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
       {facilities.map(item => (
-        <div class="group relative overflow-hidden rounded-xl shadow-sm aspect-square">
-          <img 
-            src={item.image_url} 
-            alt={item.caption || 'Fasilitas'} 
+        <div class="group relative overflow-hidden rounded-2xl shadow-sm aspect-square">
+          <img
+            src={item.thumbnail_url}
+            alt={item.caption || 'Fasilitas'}
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             loading="lazy"
           />
-          <!-- Efek gradient untuk teks caption di bawah gambar -->
-          <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4 text-left">
-            <p class="text-white font-medium text-sm md:text-base">{item.caption}</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-80 group-hover:opacity-90 transition-opacity"></div>
+          <div class="absolute bottom-0 left-0 w-full p-4 text-left">
+            <p class="text-white font-semibold text-sm md:text-base drop-shadow">{item.caption}</p>
           </div>
         </div>
       ))}
