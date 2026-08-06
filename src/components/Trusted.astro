@@ -22,6 +22,11 @@ const trustItems = trustKeys.map((key, i) => {
 
 <section id="trusted" class="trusted-section">
   <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">Kenapa Memilih Kami</span>
+      <h2>Alasan Ratusan Keluarga Percaya Kami</h2>
+    </div>
+
     <div class="trust-grid" style={`--cols:${trustItems.length}`}>
       {trustItems.map((item, i) => (
         <div class="trust-item">
@@ -37,6 +42,10 @@ const trustItems = trustKeys.map((key, i) => {
 </section>
 
 <style>
+.section-heading {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
   .trusted-section {
     padding-block: var(--space-xl);
     background: var(--color-white, #fff);
