@@ -1,31 +1,56 @@
 ---
-const { gallery } = Astro.props;
-const facilities = gallery.filter(item => item.kategori === 'facility' && item.thumbnail_url);
----
-<section id="fasilitas" class="py-20 bg-white">
-  <div class="container mx-auto px-4 text-center">
-    <span class="text-blue-600 font-semibold text-sm uppercase tracking-wide">Fasilitas</span>
-    <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-12 text-gray-800">Fasilitas Premium untuk Keluarga</h2>
+import { getImage } from 'astro:assets';
+import GalleryLightbox from './GalleryLightbox.vue';
 
-    {facilities.length > 0 ? (
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {facilities.map(item => (
-          <div class="group relative overflow-hidden rounded-2xl shadow-sm aspect-square">
-            <img
-              src={item.thumbnail_url}
-              alt={item.caption || 'Fasilitas'}
-              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/0 opacity-80 group-hover:opacity-90 transition-opacity"></div>
-            <div class="absolute bottom-0 left-0 w-full p-4 text-left">
-              <p class="text-white font-semibold text-sm md:text-base drop-shadow">{item.caption}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <p class="text-gray-400">Fasilitas belum tersedia (cek sheet Gallery, kategori "facility")</p>
-    )}
+const { gallery } = Astro.props;
+
+const raw = gallery
+  .filter(g => g.kategori === 'facility' && g.image_url)
+  .sort((a, b) => (a.urutan || 0) - (b.urutan || 0));
+
+// getImage() proses build-time yang sama kayak <Image>, tapi hasilnya
+// berupa URL string biasa, jadi bisa dilempar ke komponen Vue (client-side).
+const items = await Promise.all(raw.map(async (item) => {
+  const thumb = await getImage({ src: item.image_url, width: 400, format: 'webp', quality: 72 });
+  const full = await getImage({ src: item.image_url, width: 1200, format: 'webp', quality: 82 });
+  return {
+    id: item.id,
+    thumbSrc: thumb.src,
+    fullSrc: full.src,
+    caption: item.caption
+  };
+}));
+---
+
+<section id="fasilitas" class="facilities-section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">Fasilitas</span>
+      <h2>Fasilitas Premium untuk Keluarga</h2>
+    </div>
+    <GalleryLightbox items={items} client:visible />
   </div>
 </section>
+
+<style>
+  .facilities-section {
+    padding-block: var(--space-xl);
+    background: var(--color-bg-grey, #f5f6f8);
+  }
+  .section-heading {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+  }
+  .eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    margin-bottom: 6px;
+  }
+  .section-heading h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+  }
+</style>
