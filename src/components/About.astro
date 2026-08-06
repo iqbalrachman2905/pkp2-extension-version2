@@ -5,7 +5,7 @@ const imageTentang = gallery.find(item => item.kategori === 'tentang');
 <section id="tentang" class="py-20 bg-white">
   <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
     <div class="w-full md:w-1/2">
-      {imageTentang ? (
+      {imageTentang && imageTentang.thumbnail_url ? (
         <div class="relative">
           <img
             src={imageTentang.thumbnail_url}
@@ -18,8 +18,8 @@ const imageTentang = gallery.find(item => item.kategori === 'tentang');
           </div>
         </div>
       ) : (
-        <div class="w-full aspect-[4/3] bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 shadow-inner">
-          Gambar belum tersedia
+        <div class="w-full aspect-[4/3] bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 shadow-inner text-center px-6">
+          Gambar Tentang belum tersedia<br />(cek sheet Gallery, kategori "tentang")
         </div>
       )}
     </div>
