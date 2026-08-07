@@ -11,12 +11,19 @@ const { content } = Astro.props;
           <h2>Cek Lokasi Lengkap di Google Maps</h2>
           <p>Lihat rute, jarak, dan kondisi sekitar cluster langsung dari Google Maps.</p>
         </div>
-        <a href={content.maps_link} target="_blank" rel="noopener noreferrer" class="maps-btn">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-            <path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-          </svg>
-          Buka di Google Maps
-        </a>
+        
+        <div class="map-embed-wrapper">
+          <iframe 
+            src={content.maps_link} 
+            width="100%" 
+            height="400" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
       </div>
     </div>
   </section>
@@ -26,6 +33,7 @@ const { content } = Astro.props;
   .maps-section {
     padding-block: var(--space-lg);
   }
+  
   .maps-card {
     background: var(--color-paper);
     border-radius: var(--radius-lg);
@@ -33,8 +41,13 @@ const { content } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    align-items: flex-start;
+    /* Dihapus align-items: flex-start supaya konten bisa melar (stretch) 100% */
   }
+  
+  .maps-text {
+    width: 100%;
+  }
+
   .eyebrow {
     display: block;
     text-transform: uppercase;
@@ -44,32 +57,27 @@ const { content } = Astro.props;
     color: var(--color-gold);
     margin-bottom: 6px;
   }
+  
   .maps-text h2 {
     font-size: 1.4rem;
     margin-bottom: 6px;
+    color: var(--color-navy);
   }
+  
   .maps-text p {
-    color: var(--color-navy-soft);
+    color: var(--color-navy-soft, #475569);
     font-size: 0.92rem;
   }
-  .maps-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--color-navy);
-    color: var(--color-white);
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    white-space: nowrap;
+  
+  /* Styling khusus untuk bungkus peta */
+  .map-embed-wrapper {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden; /* Supaya ujung iframe ngikutin radius bungkusnya */
+    box-shadow: var(--shadow-sm);
   }
-
-  @media (min-width: 640px) {
-    .maps-card {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
+  
+  .map-embed-wrapper iframe {
+    display: block; /* Menghilangkan gap putih di bawah iframe */
   }
 </style>
