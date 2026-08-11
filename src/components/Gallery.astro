@@ -50,8 +50,8 @@ const items = gallery
     letter-spacing: 0.1em;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--color-gold);
-    margin-bottom: 6px;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-xs);
   }
   .section-heading h2 {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
@@ -77,8 +77,8 @@ const items = gallery
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(20,33,61,0.75), transparent);
-    color: var(--color-white);
+    background: linear-gradient(to top, color-mix(in srgb, var(--color-primary) 75%, transparent), transparent);
+    color: var(--color-bg-main);
     font-size: 0.78rem;
     padding: 20px 10px 8px;
   }
