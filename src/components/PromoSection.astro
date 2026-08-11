@@ -1,18 +1,14 @@
 ---
 const { content } = Astro.props;
 
-// Dikumpulin dari semua key yang polanya promo_items_N (promo_items_1,
-// promo_items_2, dst) - jadi berapa pun jumlahnya lo isi di sheet, otomatis
-// kebaca semua tanpa perlu ubah kode.
+// Dikumpulin dari semua key yang polanya promo_items_N
 const promoItems = Object.keys(content)
   .filter((k) => /^promo_items_\d+$/.test(k))
   .sort()
   .map((k) => content[k])
   .filter(Boolean);
 
-// Promo otomatis nongol/hilang sendiri sesuai tanggal di sheet Content -
-// gak perlu lo matiin manual pas promo abis, dan gak perlu nyalain manual
-// pas promo baru mulai.
+// Promo otomatis nongol/hilang
 const now = new Date();
 const start = content.promo_start_date ? new Date(content.promo_start_date) : null;
 const end = content.promo_end_date ? new Date(content.promo_end_date) : null;
@@ -35,6 +31,7 @@ const isPromoActive = (!start || now >= start) && (!end || now <= end);
             {content.promo_diskon_kpr && <li class="promo-diskon">✓ Diskon {content.promo_diskon_kpr}</li>}
           </ul>
         </div>
+        
         <div class="promo-card promo-card-highlight">
           <h3>Cash Keras</h3>
           <ul>
@@ -50,8 +47,8 @@ const isPromoActive = (!start || now >= start) && (!end || now <= end);
 <style>
   .promo-section {
     padding-block: var(--space-xl);
-    background: var(--color-navy);
-    color: var(--color-white);
+    background: var(--color-primary);
+    color: var(--color-bg-main);
   }
   .section-heading {
     text-align: center;
@@ -63,12 +60,12 @@ const isPromoActive = (!start || now >= start) && (!end || now <= end);
     letter-spacing: 0.1em;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--color-gold);
-    margin-bottom: 6px;
+    color: var(--color-secondary);
+    margin-bottom: var(--space-xs);
   }
   .section-heading h2 {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
-    color: var(--color-white);
+    color: var(--color-bg-main);
   }
   .promo-grid {
     display: grid;
@@ -76,29 +73,29 @@ const isPromoActive = (!start || now >= start) && (!end || now <= end);
     gap: var(--space-md);
   }
   .promo-card {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: color-mix(in srgb, var(--color-bg-main) 6%, transparent);
+    border: var(--border-width) solid color-mix(in srgb, var(--color-bg-main) 12%, transparent);
     border-radius: var(--radius-lg);
     padding: var(--space-md);
   }
   .promo-card-highlight {
-    border-color: var(--color-gold);
-    background: rgba(184, 147, 95, 0.12);
+    border-color: var(--color-secondary);
+    background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
   }
   .promo-card h3 {
     font-family: var(--font-display);
     margin-bottom: var(--space-sm);
-    color: var(--color-gold);
+    color: var(--color-secondary);
   }
   .promo-card ul {
     list-style: none;
     display: grid;
-    gap: 8px;
+    gap: var(--space-xs);
     font-size: 0.92rem;
   }
   .promo-diskon {
     font-weight: 700;
-    color: var(--color-gold);
+    color: var(--color-secondary);
   }
 
   @media (min-width: 640px) {
