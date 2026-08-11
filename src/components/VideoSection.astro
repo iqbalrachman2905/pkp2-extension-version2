@@ -11,11 +11,7 @@ const { videoId } = Astro.props;
       </div>
 
       <div class="video-facade" data-video-facade data-video-id={videoId}>
-        <img
-          src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-          alt="Thumbnail video"
-          loading="lazy"
-        />
+        <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Thumbnail video" loading="lazy" />
         <button class="video-play-btn" aria-label="Putar video">
           <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
@@ -32,10 +28,12 @@ const { videoId } = Astro.props;
     facade.addEventListener('click', () => {
       const videoId = facade.getAttribute('data-video-id');
       const iframe = document.createElement('iframe');
+      
       iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.title = 'Video cluster';
+      
       facade.replaceWith(iframe);
       iframe.className = 'video-iframe';
     }, { once: true });
@@ -50,6 +48,7 @@ const { videoId } = Astro.props;
   .container-narrow {
     max-width: 800px;
   }
+  
   .section-heading {
     text-align: center;
     margin-bottom: var(--space-lg);
@@ -61,11 +60,12 @@ const { videoId } = Astro.props;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--color-gold);
-    margin-bottom: 6px;
+    margin-bottom: var(--space-xs);
   }
   .section-heading h2 {
     font-size: clamp(1.6rem, 3vw, 2.2rem);
   }
+
   .video-facade {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -87,12 +87,13 @@ const { videoId } = Astro.props;
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: rgba(20, 33, 61, 0.85);
+    background: color-mix(in srgb, var(--color-primary) 85%, transparent);
     color: var(--color-white);
     border: none;
     display: grid;
     place-items: center;
   }
+
   :global(.video-iframe) {
     width: 100%;
     aspect-ratio: 16 / 9;
