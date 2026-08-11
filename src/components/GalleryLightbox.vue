@@ -8,8 +8,12 @@ const props = defineProps({
 const activeIndex = ref(null);
 let touchStartX = 0;
 
-function open(i) { activeIndex.value = i; }
-function close() { activeIndex.value = null; }
+function open(i) {
+  activeIndex.value = i;
+}
+function close() {
+  activeIndex.value = null;
+}
 function next() {
   if (activeIndex.value === null) return;
   activeIndex.value = (activeIndex.value + 1) % props.items.length;
@@ -52,9 +56,9 @@ onUnmounted(() => {
 
 <template>
   <div class="gallery-grid">
-    <figure
-      v-for="(item, i) in items"
-      :key="item.id"
+    <figure 
+      v-for="(item, i) in items" 
+      :key="item.id" 
       class="gallery-item"
       @click="open(i)"
     >
@@ -63,23 +67,19 @@ onUnmounted(() => {
     </figure>
   </div>
 
-  <div
-    v-if="activeIndex !== null"
+  <div 
+    v-if="activeIndex !== null" 
     class="lightbox"
     @click.self="close"
     @touchstart="onTouchStart"
     @touchend="onTouchEnd"
   >
     <button class="lb-close" @click="close" aria-label="Tutup galeri">&times;</button>
+    
     <button class="lb-nav lb-prev" @click="prev" aria-label="Foto sebelumnya">&#8249;</button>
-
-    <img
-      :src="items[activeIndex].fullSrc"
-      :alt="items[activeIndex].caption || ''"
-      class="lb-image"
-    />
-
+    <img :src="items[activeIndex].fullSrc" :alt="items[activeIndex].caption || ''" class="lb-image" />
     <button class="lb-nav lb-next" @click="next" aria-label="Foto selanjutnya">&#8250;</button>
+
     <p v-if="items[activeIndex].caption" class="lb-caption">{{ items[activeIndex].caption }}</p>
   </div>
 </template>
@@ -113,15 +113,16 @@ onUnmounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(20, 33, 61, 0.75), transparent);
-  color: var(--color-white);
+  background: linear-gradient(to top, color-mix(in srgb, var(--color-primary) 75%, transparent), transparent);
+  color: var(--color-bg-main);
   font-size: 0.78rem;
   padding: 20px 10px 8px;
 }
+
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(20, 33, 61, 0.94);
+  background: color-mix(in srgb, var(--color-primary) 94%, transparent);
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -136,17 +137,18 @@ onUnmounted(() => {
   border-radius: var(--radius-sm);
 }
 .lb-caption {
-  color: var(--color-white);
+  color: var(--color-bg-main);
   margin-top: var(--space-sm);
   font-size: 0.9rem;
 }
+
 .lb-close {
   position: absolute;
   top: var(--space-md);
   right: var(--space-md);
   background: none;
   border: none;
-  color: var(--color-white);
+  color: var(--color-bg-main);
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
@@ -155,9 +157,9 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.15);
+  background: color-mix(in srgb, var(--color-bg-main) 15%, transparent);
   border: none;
-  color: var(--color-white);
+  color: var(--color-bg-main);
   font-size: 2rem;
   width: 44px;
   height: 44px;
