@@ -13,6 +13,7 @@
   /* 2. BACKGROUND */
   --color-bg-main: #FFFFFF;       /* background dasar website */
   --color-bg-paper: #F6F5F4;      /* background section alternatif/kartu */
+  --color-scarcity: #DC2626;      /* background scarcity*/
   
   /* 3. TIPOGRAFI (Cocokkan dengan @import di atas) */
   --font-display: 'Playfair Display', Georgia, serif;

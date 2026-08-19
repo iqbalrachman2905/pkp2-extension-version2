@@ -128,7 +128,7 @@ function monthlyFor(unit) { return estimateMonthlyInstallment(unit.harga, { dpPe
 
   <div class="units-container">
     <div v-for="group in groupedByTipe" :key="group.key" class="unit-group">
-      <h3 class="group-title">Tipe {{ group.key }}</h3>
+      <h3 class="group-title">Blok {{ group.key }}</h3>
       
       <!-- Group Row: Bisa berupa Grid atau Slider tergantung isSlider -->
       <div 

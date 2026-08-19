@@ -140,7 +140,7 @@ const heroSrcSet = heroImageResult?.srcSet?.attribute || undefined;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--color-status-sold);
+    background: var(--color-scarcity);
     color: var(--color-bg-main);
     font-weight: 700;
     font-size: 0.95rem;
@@ -150,8 +150,8 @@ const heroSrcSet = heroImageResult?.srcSet?.attribute || undefined;
     animation: pulse-scarcity 2s ease-in-out infinite;
   }
   @keyframes pulse-scarcity {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-status-sold) 40%, transparent); }
-    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-status-sold) 0%, transparent); }
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-scarcity) 40%, transparent); }
+    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-scarcity) 0%, transparent); }
   }
   .hero-title {
     font-size: clamp(2.2rem, 6vw, 4rem);
