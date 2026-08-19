@@ -1,56 +1,92 @@
 ---
 import { formatRupiah, buildWaLink } from '../lib/format.js';
 
-const { content, heroImageResult, availableUnits, totalUnits } = Astro.props;
+const { content = {}, heroImageResult, availableUnits, totalUnits } = Astro.props || {};
 
-const waMessage = `Halo, saya tertarik dengan ${content.hero_title || 'properti ini'}. Boleh info lebih lanjut?`;
-const waLink = buildWaLink(content.whatsapp_number, waMessage);
+// Safe helpers — jangan melempar jika ada masalah dengan helpers eksternal
+function safeFormatRupiah(value) {
+  try {
+    if (value === null || value === undefined || value === '') return '-';
+    return formatRupiah(value);
+  } catch (e) {
+    return typeof value === 'number' ? value.toLocaleString('id-ID') : String(value || '-');
+  }
+}
+function safeBuildWaLink(number, message) {
+  try {
+    return buildWaLink(number, message);
+  } catch (e) {
+    // fallback simple wa link
+    const num = number ? String(number).replace(/[^0-9+]/g, '') : '';
+    const text = encodeURIComponent(message || 'Saya tertarik');
+    return num ? `https://wa.me/${num}?text=${text}` : `https://wa.me/?text=${text}`;
+  }
+}
+
+const title = content.hero_title || '';
+const subtitle = content.hero_subtitle || '';
+const badgeText = content.badge_text || '';
+const cluster = content.cluster_name || '';
+const priceFrom = content.price_from || content.price || '';
+const promoDp = content.promo_dp || '';
+const promoBooking = content.promo_booking || '';
+const features = [
+  content.total_unit ? `${content.total_unit} Unit` : null,
+  content.jumlah_lantai ? `${content.jumlah_lantai} Lantai` : null,
+  content.jarak_lrt || null,
+  content.jarak_tol || null
+].filter(Boolean);
+
+const waMessage = `Halo, saya tertarik dengan ${title || 'properti ini'}. Boleh info lebih lanjut?`;
+const waLink = safeBuildWaLink(content.whatsapp_number, waMessage);
+
+// fallback image jika heroImageResult tidak tersedia
+const fallbackHero = '/assets/placeholder-hero.jpg';
+const heroSrc = heroImageResult?.src || fallbackHero;
+const heroSrcSet = heroImageResult?.srcSet?.attribute || undefined;
 ---
 
 <section class="hero">
-  {heroImageResult && (
-    <img
-      src={heroImageResult.src}
-      srcset={heroImageResult.srcSet?.attribute}
-      sizes="100vw"
-      alt={content.hero_title || 'Foto cluster'}
-      loading="eager"
-      fetchpriority="high"
-      class="hero-bg"
-    />
-  )}
+  <img
+    src={heroSrc}
+    srcset={heroSrcSet}
+    sizes="100vw"
+    alt={title || 'Foto cluster'}
+    loading="eager"
+    fetchpriority="high"
+    class="hero-bg"
+  />
+
   <div class="hero-overlay" aria-hidden="true"></div>
 
   <div class="container hero-content">
-    {content.badge_text && <span class="hero-badge">{content.badge_text}</span>}
+    {badgeText && <span class="hero-badge">{badgeText}</span>}
 
-    {availableUnits !== undefined && availableUnits !== null && (
+    {typeof availableUnits === 'number' && (
       <div class="scarcity-badge">
-        🔥 Tersisa <strong>{availableUnits}</strong> dari {totalUnits} unit!
+        🔥 Tersisa <strong>{availableUnits}</strong> dari {totalUnits || content.total_unit || '-'} unit!
       </div>
     )}
 
+    <h1 class="hero-title">{title}</h1>
+    {subtitle && <p class="hero-subtitle">{subtitle}</p>}
 
-    <h1 class="hero-title">{content.hero_title}</h1>
-    {content.hero_subtitle && <p class="hero-subtitle">{content.hero_subtitle}</p>}
-
-    <div class="hero-price-card">
+    <div class="hero-price-card" role="region" aria-label="Harga mulai">
       <span class="hero-price-label">Harga mulai</span>
-      <span class="hero-price">{formatRupiah(content.price_from)}</span>
+      <span class="hero-price">{safeFormatRupiah(priceFrom)}</span>
       <div class="hero-promo">
-        {content.promo_dp && <span class="promo-chip">{content.promo_dp}</span>}
-        {content.promo_booking && <span class="promo-chip">{content.promo_booking}</span>}
+        {promoDp && <span class="promo-chip">{promoDp}</span>}
+        {promoBooking && <span class="promo-chip">{promoBooking}</span>}
       </div>
     </div>
 
-    <div class="hero-stats">
-      {content.total_unit && <div class="stat"><strong>{content.total_unit}</strong><span>Unit</span></div>}
-      {content.jumlah_lantai && <div class="stat"><strong>{content.jumlah_lantai} Lantai</strong></div>}
-      {content.jarak_lrt && <div class="stat"><strong>{content.jarak_lrt}</strong></div>}
-      {content.jarak_tol && <div class="stat"><strong>{content.jarak_tol}</strong></div>}
+    <div class="hero-stats" aria-hidden={features.length === 0}>
+      {features.map((f) => (
+        <div class="stat"><strong>{f}</strong></div>
+      ))}
     </div>
 
-    <a href={waLink} target="_blank" rel="noopener noreferrer" class="btn-wa">
+    <a href={waLink} target="_blank" rel="noopener noreferrer" class="btn-wa" aria-label="Booking via WhatsApp">
       Booking via WhatsApp
     </a>
   </div>
@@ -73,6 +109,7 @@ const waLink = buildWaLink(content.whatsapp_number, waMessage);
     height: 100%;
     object-fit: cover;
   }
+  .hero-bg { filter: brightness(0.78) saturate(0.95); }
   .hero-overlay {
     background: linear-gradient(
       to top,
@@ -120,6 +157,7 @@ const waLink = buildWaLink(content.whatsapp_number, waMessage);
     font-size: clamp(2.2rem, 6vw, 4rem);
     margin-bottom: var(--space-xs);
     max-width: 20ch;
+    font-family: var(--font-display);
   }
   .hero-subtitle {
     font-size: 1.15rem;

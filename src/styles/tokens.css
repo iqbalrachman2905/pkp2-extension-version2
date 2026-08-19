@@ -7,25 +7,25 @@
 /* ========================================================================= */
 :root {
   /* 1. WARNA BRAND (1 sumber kebenaran) */
-  --color-primary: #14213D;       /* warna dominan: teks utama, elemen kuat */
-  --color-secondary: #B8935F;     /* HANYA buat highlight: harga, badge, garis aksen */
+  --color-primary: #0f1724;       /* warna dominan: teks utama, elemen kuat */
+  --color-secondary: #c08b3a;     /* HANYA buat highlight: harga, badge, garis aksen */
   
   /* 2. BACKGROUND */
   --color-bg-main: #FFFFFF;       /* background dasar website */
-  --color-bg-paper: #EDEEF0;      /* background section alternatif/kartu */
+  --color-bg-paper: #F6F5F4;      /* background section alternatif/kartu */
   
   /* 3. TIPOGRAFI (Cocokkan dengan @import di atas) */
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'Poppins', -apple-system, sans-serif;
   
   /* 4. BENTUK (Radius corner) */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
   
   /* 5. KETEBALAN & INTENSITAS */
   --border-width: 1px;
-  --shadow-intensity-soft: 8%;    /* dipakai shadow gede (modal, floating bar) */
+  --shadow-intensity-soft: 10%;    /* dipakai shadow gede (modal, floating bar) */
   --shadow-intensity-card: 6%;    /* dipakai shadow kecil (card, item) */
 }
 /* ================= END OF ZONE A ========================================= */
